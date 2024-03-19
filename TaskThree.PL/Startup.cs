@@ -15,12 +15,16 @@ namespace TaskThree.PL
 {
     public class Startup
     {
+        // private readonly IConfiguration configuration;
+
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            // this.configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,11 +34,13 @@ namespace TaskThree.PL
             // services.AddScoped<ApplicationDBContext>();
             // services.AddSingleton<ApplicationDBContext>();
             //services.AddScoped<DbContextOptions<ApplicationDBContext>>();
-            services.AddDbContext<ApplicationDBContext>(
-                options => 
+            services.AddDbContext<ApplicationDBContext>
+                (
+                options =>
                 {
-                    options.UseSqlServer("Server=.; Database= MVCApplication; Trusted_Connection= True;");
-                });
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                }
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
