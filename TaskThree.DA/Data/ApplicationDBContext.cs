@@ -9,10 +9,13 @@ using TaskThree.DA.Models;
 
 namespace TaskThree.DA.Data
 {
-    internal class ApplicationDBContext:DbContext
+    public class ApplicationDBContext:DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer("Server=.; Database= MVCApplication; Trusted_Connection= True;");
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options):base(options)
+        {
+        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //    => optionsBuilder.UseSqlServer("Server=.; Database= MVCApplication; Trusted_Connection= True;");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
