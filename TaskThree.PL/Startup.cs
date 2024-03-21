@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskThree.BLL.Interfaces;
+using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
 
 namespace TaskThree.PL
@@ -41,6 +43,7 @@ namespace TaskThree.PL
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
                 );
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

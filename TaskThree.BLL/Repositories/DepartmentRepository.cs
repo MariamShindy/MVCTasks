@@ -10,7 +10,7 @@ using TaskThree.DA.Models;
 
 namespace TaskThree.BLL.Repositories
 {
-    internal class DepartmentRepository : IDepartmentRepository
+    public class DepartmentRepository : IDepartmentRepository
     {
         private readonly ApplicationDBContext _dbContext;
         public DepartmentRepository(ApplicationDBContext dbContext)

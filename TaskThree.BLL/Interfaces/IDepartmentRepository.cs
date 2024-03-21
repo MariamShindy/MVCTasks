@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using TaskThree.DA.Models;
 
 namespace TaskThree.BLL.Interfaces
-{
-    internal interface IDepartmentRepository
+{public interface IDepartmentRepository
     {
         IEnumerable<Department> GetAll(); //As no tracking
         Department Get(int id); 
