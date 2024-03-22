@@ -94,5 +94,21 @@ namespace TaskThree.PL.Controllers
             }
         }
 
-    }
+  //      //Delete using modal
+		//[HttpPost]
+		//[ValidateAntiForgeryToken]
+		//public IActionResult Delete(int id)
+		//{
+		//	var departmentToDelete = _departmentRepo.Get(id);
+		//	if (departmentToDelete == null)
+		//	{
+		//		return NotFound(); 
+		//	}
+
+		//	_departmentRepo.Delete(departmentToDelete); 
+
+		//	return RedirectToAction("Index");
+		//}
+
+	}
 }
