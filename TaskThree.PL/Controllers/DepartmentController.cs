@@ -30,6 +30,8 @@ namespace TaskThree.PL.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
+
         public IActionResult Create(Department department)
         {
             if (ModelState.IsValid) //server side validation
@@ -64,6 +66,7 @@ namespace TaskThree.PL.Controllers
             //return View(department);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit([FromRoute]int id ,Department department)
         {
             if (id != department.Id)
