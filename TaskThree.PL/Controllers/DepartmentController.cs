@@ -6,6 +6,7 @@ using System.ComponentModel;
 using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Models;
+using TaskThree.PL.Models;
 
 namespace TaskThree.PL.Controllers
 {
@@ -93,8 +94,30 @@ namespace TaskThree.PL.Controllers
              return View(department);
             }
         }
+		public IActionResult Delete(int? id)
+		{
+			return Details(id, "Delete");		
+		}
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            try
+            {
+                _departmentRepo.Delete(department);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if (_env.IsDevelopment())
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                else
+                    ModelState.AddModelError(string.Empty, ("An error has been occured during update the department"));
+                return View(department);    
+               //return View("Error", new ErrorViewModel());
+            }
+        }
 
-  //      //Delete using modal
+		//      //Delete using modal
 		//[HttpPost]
 		//[ValidateAntiForgeryToken]
 		//public IActionResult Delete(int id)
