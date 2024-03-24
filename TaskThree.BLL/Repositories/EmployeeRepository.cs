@@ -10,40 +10,48 @@ using TaskThree.DA.Models;
 
 namespace TaskThree.BLL.Repositories
 {
-    public class EmployeeRepository:IEmployeeRepository
+    public class EmployeeRepository : GenericRepository<Employee>, IEmployeeRepository
     {
-        private readonly ApplicationDBContext _dbContext;
-        public EmployeeRepository(ApplicationDBContext dbContext)
-        {
-            _dbContext = dbContext;//Ask CLR to create the dbcontext object 
-        }
-        public int Add(Employee entity)
-        {
-            _dbContext.Employees.Add(entity);
-            return _dbContext.SaveChanges();
-        }
 
-        public int Delete(Employee entity)
-        {
-            _dbContext.Employees.Remove(entity);
-            return _dbContext.SaveChanges();
-        }
+        //private readonly ApplicationDBContext _dbContext;
+        //public EmployeeRepository(ApplicationDBContext dbContext)
+        //{
+        //    _dbContext = dbContext;//Ask CLR to create the dbcontext object 
+        //}
+        //public int Add(Employee entity)
+        //{
+        //    _dbContext.Employees.Add(entity);
+        //    return _dbContext.SaveChanges();
+        //}
 
-        public Employee Get(int id)
-        {
-            return _dbContext.Find<Employee>(id);
-        }
+        //public int Delete(Employee entity)
+        //{
+        //    _dbContext.Employees.Remove(entity);
+        //    return _dbContext.SaveChanges();
+        //}
 
-        public IEnumerable<Employee> GetAll()
-        {
-            return _dbContext.Employees.AsNoTracking().ToList();
-        }
+        //public Employee Get(int id)
+        //{
+        //    return _dbContext.Find<Employee>(id);
+        //}
 
-        public int Update(Employee entity)
-        {
-            _dbContext.Employees.Update(entity);
-            return _dbContext.SaveChanges();
-        }
+        //public IEnumerable<Employee> GetAll()
+        //{
+        //    return _dbContext.Employees.AsNoTracking().ToList();
+        //}
 
+        //public int Update(Employee entity)
+        //{
+        //    _dbContext.Employees.Update(entity);
+        //    return _dbContext.SaveChanges();
+        //}
+
+        public EmployeeRepository(ApplicationDBContext dBContext):base(dBContext)
+        {
+        }
+        public IQueryable<Employee> GetEmployeesByAddress(string address)
+        {
+            return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
+        }
     }
 }

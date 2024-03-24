@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 namespace TaskThree.DA.Models
 {
-    public class Department
+    public class Department : ModelBase
     {
-        public int Id { get; set; }
         //[Required(ErrorMessage ="code is reuqired here !!")]
         public string Code { get; set; }
         //[Required]
