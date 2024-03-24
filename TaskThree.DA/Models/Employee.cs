@@ -30,7 +30,7 @@ namespace TaskThree.DA.Models
         public string Name { get; set; }
         [Range(22,30)]
         public int? Age { get; set; }
-        [RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",ErrorMessage ="Address must be like 123 Street-City-Country")]
+        //[RegularExpression(@"^[0-9]{1,3}-[a-zA-Z]{5,10}-[a-zA-Z]{5,10}-[a-zA-Z]{4,10}-[a-zA-Z]{5,10}$",ErrorMessage ="Address must be like 123 Street-City-Country")]
         public string Address {  get; set; }
         public EmpType EmployeeType { get; set; }
         public Gender Gender { get; set; }

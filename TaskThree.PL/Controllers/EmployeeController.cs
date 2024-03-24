@@ -21,7 +21,8 @@ namespace TaskThree.PL.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var employees = employeeRepository.GetAll();
+            return View(employees);
         }
         [HttpGet]
         public IActionResult Create()
