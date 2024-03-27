@@ -39,7 +39,7 @@ namespace TaskThree.PL.Controllers
             {
                 var count =_departmentRepo.Add(department);
                 if (count > 0)
-                    RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
             }
             return View(department);
         }

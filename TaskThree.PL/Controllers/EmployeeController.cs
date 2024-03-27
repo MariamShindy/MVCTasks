@@ -39,9 +39,10 @@ namespace TaskThree.PL.Controllers
             {
                 var count = employeeRepository.Add(employee);
                 if (count > 0)
-                {
-                    RedirectToAction(nameof(Index));
-                }
+                    TempData["message"] = "Department is created successfully";
+                else
+                    TempData["message"] = "An error has occurud while creating department";
+             return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }

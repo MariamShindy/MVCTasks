@@ -10,7 +10,12 @@
 	@ViewBag.message
 </div> *@
 
-
+@if (!string.IsNullOrEmpty(TempData["message"] as string))
+{
+	<div class="alert alert-success">
+		@TempData["message"]
+	</div>
+}
 <h1>Index</h1>
 <br>
 <br>
