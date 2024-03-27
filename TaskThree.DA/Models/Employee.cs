@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -45,10 +46,11 @@ namespace TaskThree.DA.Models
         [Display(Name = "Hiring Date")]
         public DateTime HiringDate { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
+        //ForeginKey
+        public int? DepartmentId { get; set; }
 
-
-
-
-
+		//Navigational property
+		//[InverseProperty(nameof(Models.Department.Employees))]
+		public Department Department { get; set; }
     }
 }

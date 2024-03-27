@@ -17,5 +17,7 @@ namespace TaskThree.DA.Models
         public string Name { get; set; }
         [DisplayName("Date of creation")]
         public DateTime DateOfCreation { get; set; }
+        //Navigational property
+        public ICollection<Employee> Employees { get; set; } = new HashSet<Employee>();
     }
 }

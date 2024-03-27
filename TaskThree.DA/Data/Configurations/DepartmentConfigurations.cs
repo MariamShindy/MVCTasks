@@ -16,6 +16,7 @@ namespace TaskThree.DA.Data.Configurations
             builder.Property(D => D.Id  ).UseIdentityColumn(10, 10);
             builder.Property(D => D.Name).IsRequired().HasMaxLength(10).HasColumnType("varchar");
             builder.Property(D => D.Code).IsRequired().HasMaxLength(10).HasColumnType("varchar");
+            builder.HasMany(D  => D.Employees).WithOne(E => E.Department).HasForeignKey(E => E.DepartmentId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
