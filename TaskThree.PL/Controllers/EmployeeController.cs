@@ -13,11 +13,14 @@ namespace TaskThree.PL.Controllers
     {
         private readonly IWebHostEnvironment _env;
         private readonly IEmployeeRepository employeeRepository;
-        public EmployeeController(IWebHostEnvironment _env , IEmployeeRepository employeeRepository)
+		//private readonly IDepartmentRepository departmentRepository;
+
+		public EmployeeController(IWebHostEnvironment _env , IEmployeeRepository employeeRepository /*,IDepartmentRepository departmentRepository*/)
         {
             this._env = _env;
             this.employeeRepository = employeeRepository;
-        }
+			//this.departmentRepository = departmentRepository;
+		}
 
         public IActionResult Index()
         {
@@ -29,6 +32,8 @@ namespace TaskThree.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //ViewData["Departments"] = departmentRepository.GetAll();
+            //ViewBag.Departments = departmentRepository.GetAll(); 
             return View();
         }
         [HttpPost]
@@ -63,6 +68,7 @@ namespace TaskThree.PL.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            //ViewBag.Departments = departmentRepository.GetAll();
             return Details(id, "Edit");
         }
         [HttpPost]

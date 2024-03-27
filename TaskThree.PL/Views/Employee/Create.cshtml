@@ -1,6 +1,8 @@
 ﻿@model Employee
+@* @inject IDepartmentRepository _departmentRepo *@
 @{
     ViewData["Title"] = "Create Employee";
+    // ViewBag.Departments = _departmentRepo.GetAll();
 }
 
 <h1>Create Employee</h1>
