@@ -21,6 +21,8 @@ namespace TaskThree.PL.Controllers
 
         public IActionResult Index()
         {
+            //ViewData["message"] = "Hello ViewData";
+            //ViewBag.message = "Hello ViewBag";
             var employees = employeeRepository.GetAll();
             return View(employees);
         }
