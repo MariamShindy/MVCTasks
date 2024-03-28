@@ -53,5 +53,10 @@ namespace TaskThree.BLL.Repositories
         {
             return _dbContext.Employees.Where(E => E.Address.ToLower() == address.ToLower());
         }
-    }
+
+		public IEnumerable<Employee> SearchByName(string name)
+		{
+            return _dbContext.Employees.Where(E => E.Name.ToLower().Contains(name));
+		}
+	}
 }

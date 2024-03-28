@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Linq;
 using TaskThree.BLL.Interfaces;
 using TaskThree.DA.Data;
 using TaskThree.DA.Models;
@@ -22,14 +23,22 @@ namespace TaskThree.PL.Controllers
 			//this.departmentRepository = departmentRepository;
 		}
 
-        public IActionResult Index()
+        public IActionResult Index(string SearchInp)
         {
+            var employees = Enumerable.Empty<Employee>();
+            if (string.IsNullOrEmpty(SearchInp))
+            {
+				 employees = employeeRepository.GetAll();
+			}
             //ViewData["message"] = "Hello ViewData";
             //ViewBag.message = "Hello ViewBag";
-            var employees = employeeRepository.GetAll();
-            return View(employees);
-        }
-        [HttpGet]
+            else
+            {
+                 employees =employeeRepository.SearchByName(SearchInp.ToLower());
+            }
+			return View(employees);
+		}
+		[HttpGet]
         public IActionResult Create()
         {
             //ViewData["Departments"] = departmentRepository.GetAll();
