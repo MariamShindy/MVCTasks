@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Models;
 using TaskThree.PL.Models;
+using TaskThree.PL.ViewModels;
 
 namespace TaskThree.PL.Controllers
 {
@@ -14,16 +17,19 @@ namespace TaskThree.PL.Controllers
     {
         private readonly IDepartmentRepository _departmentRepo;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRepo,IWebHostEnvironment env)
+        public DepartmentController(IDepartmentRepository departmentRepo, IWebHostEnvironment env, IMapper mapper)
         {
             _departmentRepo = departmentRepo;
             _env = env;
+            this.mapper = mapper;
         }
         public IActionResult Index()
         {
             var departments = _departmentRepo.GetAll();
-            return View(departments);
+            var mappedDepartments = mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
+            return View(mappedDepartments);
         }
         [HttpGet]
         public IActionResult Create()
@@ -33,32 +39,33 @@ namespace TaskThree.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Create(Department department)
+        public IActionResult Create(DepartmentViewModel departmentVM)
         {
+            var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
             if (ModelState.IsValid) //server side validation
             {
-                var count =_departmentRepo.Add(department);
+                var count = _departmentRepo.Add(mappedDep);
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            return View(mappedDep);
         }
 
         [HttpGet]
-        public IActionResult Details(int? id , string viewName = "Details")
+        public IActionResult Details(int? id, string viewName = "Details")
         {
             if (/*id is null*/ !id.HasValue)
                 return BadRequest();
             var department = _departmentRepo.Get(id.Value);
             if (department is null)
                 return NotFound();
-            return View(viewName,department);
+            var mappedDep = mapper.Map<Department, DepartmentViewModel>(department);
+            return View(viewName, mappedDep);
         }
-
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            return Details(id,"Edit");
+            return Details(id, "Edit");
             //if (/*id is null*/ !id.HasValue)
             //    return BadRequest();
             //var department = _departmentRepo.Get(id.Value);
@@ -68,19 +75,20 @@ namespace TaskThree.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id ,Department department)
+        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentVM)
         {
-            if (id != department.Id)
+            var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
+            if (id != departmentVM.Id)
             {
                 return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return View(department);
+                return View(departmentVM);
             }
             try
             {
-                _departmentRepo.Update(department);
+                _departmentRepo.Update(mappedDep);
                 return RedirectToAction(nameof(Index));
             }
             catch (System.Exception ex)
@@ -88,22 +96,23 @@ namespace TaskThree.PL.Controllers
                 //log exception
                 //friendly message
                 if (_env.IsDevelopment())
-                ModelState.AddModelError(string.Empty , ex.Message);
+                    ModelState.AddModelError(string.Empty, ex.Message);
                 else
                     ModelState.AddModelError(string.Empty, ("An error has been occured during update the department"));
-             return View(department);
+                return View(departmentVM);
             }
         }
-		public IActionResult Delete(int? id)
-		{
-			return Details(id, "Delete");		
-		}
+        public IActionResult Delete(int? id)
+        {
+            return Details(id, "Delete");
+        }
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public IActionResult Delete(DepartmentViewModel departmentVM)
         {
             try
             {
-                _departmentRepo.Delete(department);
+                var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
+                _departmentRepo.Delete(mappedDep);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -112,26 +121,26 @@ namespace TaskThree.PL.Controllers
                     ModelState.AddModelError(string.Empty, ex.Message);
                 else
                     ModelState.AddModelError(string.Empty, ("An error has been occured during update the department"));
-                return View(department);    
-               //return View("Error", new ErrorViewModel());
+                return View(departmentVM);
+                //return View("Error", new ErrorViewModel());
             }
         }
 
-		//      //Delete using modal
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public IActionResult Delete(int id)
-		//{
-		//	var departmentToDelete = _departmentRepo.Get(id);
-		//	if (departmentToDelete == null)
-		//	{
-		//		return NotFound(); 
-		//	}
+        //      //Delete using modal
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Delete(int id)
+        //{
+        //	var departmentToDelete = _departmentRepo.Get(id);
+        //	if (departmentToDelete == null)
+        //	{
+        //		return NotFound(); 
+        //	}
 
-		//	_departmentRepo.Delete(departmentToDelete); 
+        //	_departmentRepo.Delete(departmentToDelete); 
 
-		//	return RedirectToAction("Index");
-		//}
+        //	return RedirectToAction("Index");
+        //}
 
-	}
+    }
 }

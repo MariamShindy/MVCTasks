@@ -14,6 +14,7 @@ using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
 using TaskThree.PL.Extensions;
+using TaskThree.PL.Helpers;
 
 namespace TaskThree.PL
 {
@@ -46,6 +47,7 @@ namespace TaskThree.PL
                 }
                 ,ServiceLifetime.Scoped);
             services.AppApplicationServices();
+            services.AddAutoMapper( M => M.AddProfile(new MappingProfiles()));
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
