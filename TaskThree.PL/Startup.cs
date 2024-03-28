@@ -8,10 +8,12 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
+using TaskThree.PL.Extensions;
 
 namespace TaskThree.PL
 {
@@ -42,10 +44,9 @@ namespace TaskThree.PL
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
-                );
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-        }
+                ,ServiceLifetime.Scoped);
+            services.AppApplicationServices();
+		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
