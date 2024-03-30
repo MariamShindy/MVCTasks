@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TaskThree.BLL.Interfaces;
+using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
 using TaskThree.DA.Models;
 using TaskThree.PL.ViewModels;
@@ -35,16 +36,16 @@ namespace TaskThree.PL.Controllers
         public IActionResult Index(string SearchInp)
         {
             var employees = Enumerable.Empty<Employee>();
-
+            var employeeRepo = unitOfWork.Repository<Employee>() as EmployeeRepository;
             if (string.IsNullOrEmpty(SearchInp))
             {
-                employees = unitOfWork.EmployeeRepository.GetAll();
+                employees = employeeRepo.GetAll();
             }
             //ViewData["message"] = "Hello ViewData";
             //ViewBag.message = "Hello ViewBag";
             else
             {
-                employees = unitOfWork.EmployeeRepository.SearchByName(SearchInp.ToLower());
+                employees = employeeRepo.SearchByName(SearchInp.ToLower());
             }
             var mappedEmployees = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmployees);
@@ -64,7 +65,7 @@ namespace TaskThree.PL.Controllers
             var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
             if (ModelState.IsValid)
             {
-                unitOfWork.EmployeeRepository.Add(mappedEmp);
+                unitOfWork.Repository<Employee>().Add(mappedEmp);
                 var count = unitOfWork.Complete();
                 if (count > 0)
                     TempData["message"] = "Department is created successfully";
@@ -81,7 +82,7 @@ namespace TaskThree.PL.Controllers
             {
                 return BadRequest();
             }
-            var emp = unitOfWork.EmployeeRepository.Get(id.Value);
+            var emp = unitOfWork.Repository<Employee>().Get(id.Value);
             var mappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
             if (emp is null)
             {
@@ -108,7 +109,7 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                unitOfWork.EmployeeRepository.Update(mappedEmp);
+                unitOfWork.Repository<Employee>().Update(mappedEmp);
                 unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -133,7 +134,7 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                unitOfWork.Repository<Employee>().Delete(mappedEmp);
                 unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }

@@ -30,7 +30,7 @@ namespace TaskThree.PL.Controllers
         }
         public IActionResult Index()
         {
-            var departments = unitOfWork.DepartmentRepository.GetAll();
+            var departments = unitOfWork.Repository<Department>().GetAll();
             var mappedDepartments = mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
             return View(mappedDepartments);
         }
@@ -47,7 +47,7 @@ namespace TaskThree.PL.Controllers
             var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
             if (ModelState.IsValid) //server side validation
             {
-                unitOfWork.DepartmentRepository.Add(mappedDep);
+                unitOfWork.Repository<Department>().Add(mappedDep);
                 var count = unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
@@ -60,7 +60,7 @@ namespace TaskThree.PL.Controllers
         {
             if (/*id is null*/ !id.HasValue)
                 return BadRequest();
-            var department = unitOfWork.DepartmentRepository.Get(id.Value);
+            var department = unitOfWork.Repository<Department>().Get(id.Value);
             if (department is null)
                 return NotFound();
             var mappedDep = mapper.Map<Department, DepartmentViewModel>(department);
@@ -92,7 +92,7 @@ namespace TaskThree.PL.Controllers
             }
             try
             {
-                unitOfWork.DepartmentRepository.Update(mappedDep);
+                unitOfWork.Repository<Department>().Update(mappedDep);
                 unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
@@ -117,7 +117,7 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
-                unitOfWork.DepartmentRepository.Delete(mappedDep);
+                unitOfWork.Repository<Department>().Delete(mappedDep);
                 unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
