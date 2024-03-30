@@ -15,19 +15,22 @@ namespace TaskThree.PL.Controllers
 {
     public class DepartmentController : Controller
     {
-        private readonly IDepartmentRepository _departmentRepo;
+        private readonly IUnitOfWork unitOfWork;
+
+        // private readonly IDepartmentRepository _departmentRepo;
         private readonly IWebHostEnvironment _env;
         private readonly IMapper mapper;
 
-        public DepartmentController(IDepartmentRepository departmentRepo, IWebHostEnvironment env, IMapper mapper)
+        public DepartmentController(/*IDepartmentRepository departmentRepo*/ IUnitOfWork unitOfWork, IWebHostEnvironment env, IMapper mapper)
         {
-            _departmentRepo = departmentRepo;
+            this.unitOfWork = unitOfWork;
+            // _departmentRepo = departmentRepo;
             _env = env;
             this.mapper = mapper;
         }
         public IActionResult Index()
         {
-            var departments = _departmentRepo.GetAll();
+            var departments = unitOfWork.DepartmentRepository.GetAll();
             var mappedDepartments = mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
             return View(mappedDepartments);
         }
@@ -44,7 +47,8 @@ namespace TaskThree.PL.Controllers
             var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
             if (ModelState.IsValid) //server side validation
             {
-                var count = _departmentRepo.Add(mappedDep);
+                unitOfWork.DepartmentRepository.Add(mappedDep);
+                var count = unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
@@ -56,7 +60,7 @@ namespace TaskThree.PL.Controllers
         {
             if (/*id is null*/ !id.HasValue)
                 return BadRequest();
-            var department = _departmentRepo.Get(id.Value);
+            var department = unitOfWork.DepartmentRepository.Get(id.Value);
             if (department is null)
                 return NotFound();
             var mappedDep = mapper.Map<Department, DepartmentViewModel>(department);
@@ -88,7 +92,8 @@ namespace TaskThree.PL.Controllers
             }
             try
             {
-                _departmentRepo.Update(mappedDep);
+                unitOfWork.DepartmentRepository.Update(mappedDep);
+                unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (System.Exception ex)
@@ -112,7 +117,8 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
-                _departmentRepo.Delete(mappedDep);
+                unitOfWork.DepartmentRepository.Delete(mappedDep);
+                unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

@@ -17,15 +17,17 @@ namespace TaskThree.PL.Controllers
     public class EmployeeController : Controller
     {
         private readonly IWebHostEnvironment _env;
-        private readonly IEmployeeRepository employeeRepository;
+        private readonly IUnitOfWork unitOfWork;
+       // private readonly IEmployeeRepository employeeRepository;
         private readonly IMapper mapper;
 
         //private readonly IDepartmentRepository departmentRepository;
 
-        public EmployeeController(IWebHostEnvironment _env, IEmployeeRepository employeeRepository, IMapper mapper /*,IDepartmentRepository departmentRepository*/)
+        public EmployeeController(IWebHostEnvironment _env,IUnitOfWork unitOfWork, /*IEmployeeRepository employeeRepository,*/ IMapper mapper /*,IDepartmentRepository departmentRepository*/)
         {
             this._env = _env;
-            this.employeeRepository = employeeRepository;
+            this.unitOfWork = unitOfWork;
+            //this.employeeRepository = employeeRepository;
             this.mapper = mapper;
             //this.departmentRepository = departmentRepository;
         }
@@ -36,13 +38,13 @@ namespace TaskThree.PL.Controllers
 
             if (string.IsNullOrEmpty(SearchInp))
             {
-                employees = employeeRepository.GetAll();
+                employees = unitOfWork.EmployeeRepository.GetAll();
             }
             //ViewData["message"] = "Hello ViewData";
             //ViewBag.message = "Hello ViewBag";
             else
             {
-                employees = employeeRepository.SearchByName(SearchInp.ToLower());
+                employees = unitOfWork.EmployeeRepository.SearchByName(SearchInp.ToLower());
             }
             var mappedEmployees = mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employees);
             return View(mappedEmployees);
@@ -62,7 +64,8 @@ namespace TaskThree.PL.Controllers
             var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
             if (ModelState.IsValid)
             {
-                var count = employeeRepository.Add(mappedEmp);
+                unitOfWork.EmployeeRepository.Add(mappedEmp);
+                var count = unitOfWork.Complete();
                 if (count > 0)
                     TempData["message"] = "Department is created successfully";
                 else
@@ -78,7 +81,7 @@ namespace TaskThree.PL.Controllers
             {
                 return BadRequest();
             }
-            var emp = employeeRepository.Get(id.Value);
+            var emp = unitOfWork.EmployeeRepository.Get(id.Value);
             var mappedEmp = mapper.Map<Employee, EmployeeViewModel>(emp);
             if (emp is null)
             {
@@ -105,7 +108,8 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                employeeRepository.Update(mappedEmp);
+                unitOfWork.EmployeeRepository.Update(mappedEmp);
+                unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (System.Exception ex)
@@ -129,7 +133,8 @@ namespace TaskThree.PL.Controllers
             try
             {
                 var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-                employeeRepository.Delete(mappedEmp);
+                unitOfWork.EmployeeRepository.Delete(mappedEmp);
+                unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
