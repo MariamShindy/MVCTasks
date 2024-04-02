@@ -11,6 +11,7 @@ using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
 using TaskThree.DA.Models;
+using TaskThree.PL.Helpers;
 using TaskThree.PL.ViewModels;
 
 namespace TaskThree.PL.Controllers
@@ -61,6 +62,7 @@ namespace TaskThree.PL.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EmployeeViewModel employeeVM)
         {
+            employeeVM.ImageName = DocumentSettings.UploadFile(employeeVM.Image, "images");
             //Employee mappedEmployee = (Employee)employee;
             var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
             if (ModelState.IsValid)
@@ -68,7 +70,9 @@ namespace TaskThree.PL.Controllers
                 unitOfWork.Repository<Employee>().Add(mappedEmp);
                 var count = unitOfWork.Complete();
                 if (count > 0)
+                {
                     TempData["message"] = "Department is created successfully";
+                }
                 else
                     TempData["message"] = "An error has occurud while creating department";
                 return RedirectToAction(nameof(Index));
