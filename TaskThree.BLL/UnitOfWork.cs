@@ -11,7 +11,7 @@ using TaskThree.DA.Models;
 
 namespace TaskThree.BLL
 {
-    public class UnitOfWork : IUnitOfWork,IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDBContext applicationDBContext;
         private Hashtable _repositories;
@@ -23,13 +23,13 @@ namespace TaskThree.BLL
             _repositories = new Hashtable();
         }
 
-        public int Complete()
+        public async Task<int> Complete()
         {
-            return applicationDBContext.SaveChanges();
+            return await applicationDBContext.SaveChangesAsync();
         }
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            applicationDBContext.Dispose();
+            await applicationDBContext.DisposeAsync();
         }
 
         public IGenericRepository<T> Repository<T>() where T : ModelBase

@@ -19,29 +19,28 @@ namespace TaskThree.BLL.Repositories
             _dbContext = dbContext;//Ask CLR to create the dbcontext object 
         }
         public void Add(T entity)
-        {
-            _dbContext.Set<T>().Add(entity);
-        }
+        =>  _dbContext.Set<T>().Add(entity);
+        
 
         public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
         }
 
-        public T Get(int id)
+        public async Task<T> GetAsync(int id)
         {
-            return _dbContext.Find<T>(id);
+            return await _dbContext.FindAsync<T>(id);
         }
 
-        public IEnumerable<T> GetAll()
+        public  IEnumerable<T> GetAllAsync()
         {
             if (typeof(T) == typeof(Employee))
             {
-                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+				return (IEnumerable<T>) _dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
             }
             else
             {
-                return _dbContext.Set<T>().AsNoTracking().ToList();
+                return  _dbContext.Set<T>().AsNoTracking().ToList();
             }
         }
 

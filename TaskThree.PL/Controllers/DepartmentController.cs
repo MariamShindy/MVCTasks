@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using TaskThree.BLL.Interfaces;
 using TaskThree.BLL.Repositories;
 using TaskThree.DA.Models;
@@ -30,7 +31,7 @@ namespace TaskThree.PL.Controllers
         }
         public IActionResult Index()
         {
-            var departments = unitOfWork.Repository<Department>().GetAll();
+            var departments = unitOfWork.Repository<Department>().GetAllAsync();
             var mappedDepartments = mapper.Map<IEnumerable<Department>, IEnumerable<DepartmentViewModel>>(departments);
             return View(mappedDepartments);
         }
@@ -42,13 +43,13 @@ namespace TaskThree.PL.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Create(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Create(DepartmentViewModel departmentVM)
         {
             var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
             if (ModelState.IsValid) //server side validation
             {
                 unitOfWork.Repository<Department>().Add(mappedDep);
-                var count = unitOfWork.Complete();
+                var count =await unitOfWork.Complete();
                 if (count > 0)
                     return RedirectToAction(nameof(Index));
             }
@@ -56,20 +57,20 @@ namespace TaskThree.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string viewName = "Details")
+        public async Task<IActionResult> Details(int? id, string viewName = "Details")
         {
             if (/*id is null*/ !id.HasValue)
                 return BadRequest();
-            var department = unitOfWork.Repository<Department>().Get(id.Value);
+            var department = await unitOfWork.Repository<Department>().GetAsync(id.Value);
             if (department is null)
                 return NotFound();
             var mappedDep = mapper.Map<Department, DepartmentViewModel>(department);
             return View(viewName, mappedDep);
         }
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id, "Edit");
+            return await Details(id, "Edit");
             //if (/*id is null*/ !id.HasValue)
             //    return BadRequest();
             //var department = _departmentRepo.Get(id.Value);
@@ -79,7 +80,7 @@ namespace TaskThree.PL.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Edit([FromRoute] int id, DepartmentViewModel departmentVM)
         {
             var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
             if (id != departmentVM.Id)
@@ -93,7 +94,7 @@ namespace TaskThree.PL.Controllers
             try
             {
                 unitOfWork.Repository<Department>().Update(mappedDep);
-                unitOfWork.Complete();
+                await unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (System.Exception ex)
@@ -107,18 +108,18 @@ namespace TaskThree.PL.Controllers
                 return View(departmentVM);
             }
         }
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
         [HttpPost]
-        public IActionResult Delete(DepartmentViewModel departmentVM)
+        public async Task<IActionResult> Delete(DepartmentViewModel departmentVM)
         {
             try
             {
                 var mappedDep = mapper.Map<DepartmentViewModel, Department>(departmentVM);
                 unitOfWork.Repository<Department>().Delete(mappedDep);
-                unitOfWork.Complete();
+                await unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
