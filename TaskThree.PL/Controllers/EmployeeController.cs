@@ -92,7 +92,12 @@ namespace TaskThree.PL.Controllers
             {
                 return NotFound();
             }
-            return View(ViewName, mappedEmp);
+            if (ViewName.Equals(nameof(Delete) , StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ImageName"] = emp.ImageName;
+            }
+
+			return View(ViewName, mappedEmp);
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -137,10 +142,16 @@ namespace TaskThree.PL.Controllers
         {
             try
             {
+                employeeVM.ImageName = TempData["ImageName"] as string;
                 var mappedEmp = mapper.Map<EmployeeViewModel, Employee>(employeeVM);
                 unitOfWork.Repository<Employee>().Delete(mappedEmp);
-                unitOfWork.Complete();
-                return RedirectToAction(nameof(Index));
+                var count = unitOfWork.Complete();
+                if (count > 0)
+                {
+                    DocumentSettings.DeleteFile(employeeVM.ImageName, "images");
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(employeeVM);
             }
             catch (Exception ex)
             {
