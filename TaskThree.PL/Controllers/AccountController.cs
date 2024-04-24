@@ -85,5 +85,10 @@ namespace TaskThree.PL.Controllers
 			return View(model);
 
 		}
+		public async new Task<IActionResult> SignOut()
+		{
+			await signInManager.SignOutAsync();
+			return RedirectToAction(nameof(SignIn));
+		}
 	}
 }
