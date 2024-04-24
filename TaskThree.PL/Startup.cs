@@ -40,9 +40,9 @@ namespace TaskThree.PL
                 {
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
                 }
-                ,ServiceLifetime.Scoped);
+                , ServiceLifetime.Scoped);
             services.AppApplicationServices();
-            services.AddAutoMapper( M => M.AddProfile(new MappingProfiles()));
+            services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
             //services.AddScoped<UserManager<ApplicationUser>>();
             //services.AddScoped<SignInManager<ApplicationUser>>();
             //services.AddScoped<RoleManager<IdentityRole>>();
@@ -61,7 +61,23 @@ namespace TaskThree.PL
 
             }).AddEntityFrameworkStores<ApplicationDBContext>();
 
-            services.AddAuthentication();
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/SignIn";
+                options.ExpireTimeSpan = TimeSpan.FromDays(1);
+                options.AccessDeniedPath = "/Home/Error";
+            });
+
+            //services.AddAuthentication("Hamda");
+            services.AddAuthentication(options =>
+            {
+                //options.DefaultAuthenticateScheme = "Identity.Application";
+            }).AddCookie("Hamda" , options =>
+            {
+				options.LoginPath = "/Account/SignIn";
+				options.ExpireTimeSpan = TimeSpan.FromDays(1);
+				options.AccessDeniedPath = "/Home/Error";
+			});
 
             //services.AddAuthentication();
 		}
@@ -83,7 +99,7 @@ namespace TaskThree.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
