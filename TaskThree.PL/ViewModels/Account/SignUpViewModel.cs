@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TaskThree.PL.ViewModels.User
+namespace TaskThree.PL.ViewModels.Account
 {
 	public class SignUpViewModel
 	{

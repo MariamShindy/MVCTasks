@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TaskThree.PL.Models;
-using TaskThree.PL.ViewModels.User;
+using TaskThree.PL.ViewModels.Account;
 
 namespace TaskThree.PL.Controllers
 {
@@ -52,6 +52,38 @@ namespace TaskThree.PL.Controllers
 		public IActionResult SignIn()
 		{
 			return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SignIn(SignInViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await userManager.FindByEmailAsync(model.Email);
+				if (user is not null)
+				{
+					var flag = await userManager.CheckPasswordAsync(user, model.Password);
+					if (flag)
+					{
+						var result = await signInManager.PasswordSignInAsync(user, model.Password,model.RememberMe,false);
+						if (result.IsLockedOut)
+						{
+							ModelState.AddModelError(string.Empty, "Your account is locked"); 
+						}
+						if (result.Succeeded)
+						{
+							return RedirectToAction(nameof(HomeController.Index),"Home");
+						}
+						if (result.IsNotAllowed)
+						{
+							ModelState.AddModelError(string.Empty, "Your account is not confirmed yet"); ;
+						}
+
+					}
+				}
+				ModelState.AddModelError(string.Empty, "Invalid login");
+			}
+			return View(model);
+
 		}
 	}
 }

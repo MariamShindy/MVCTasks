@@ -1,18 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Threading.Tasks;
-using TaskThree.BLL.Interfaces;
-using TaskThree.BLL.Repositories;
 using TaskThree.DA.Data;
 using TaskThree.PL.Extensions;
 using TaskThree.PL.Helpers;
@@ -20,7 +13,7 @@ using TaskThree.PL.Models;
 
 namespace TaskThree.PL
 {
-    public class Startup
+	public class Startup
     {
         // private readonly IConfiguration configuration;
 
@@ -67,6 +60,9 @@ namespace TaskThree.PL
                 options.User.RequireUniqueEmail = true;
 
             }).AddEntityFrameworkStores<ApplicationDBContext>();
+
+            services.AddAuthentication();
+
             //services.AddAuthentication();
 		}
 
