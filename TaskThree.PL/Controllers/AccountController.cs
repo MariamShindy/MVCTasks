@@ -90,5 +90,23 @@ namespace TaskThree.PL.Controllers
 			await signInManager.SignOutAsync();
 			return RedirectToAction(nameof(SignIn));
 		}
+		public IActionResult ForgetPassword()
+		{
+			 return View();
+		}
+		[HttpPost]
+		public async Task<IActionResult> SendResetPasswordEmail(ForgetPasswordViewModel model)
+		{
+			if (ModelState.IsValid)
+			{
+				var user = await userManager.FindByEmailAsync(model.Email);
+				if(user is not null)
+				{
+					//send email
+				}
+				ModelState.AddModelError(string.Empty, "There is not account with this email");
+			}
+			return View(model);
+		}
 	}
 }
