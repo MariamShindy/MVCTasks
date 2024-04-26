@@ -10,6 +10,7 @@ using TaskThree.DA.Data;
 using TaskThree.PL.Extensions;
 using TaskThree.PL.Helpers;
 using TaskThree.PL.Models;
+using TaskThree.PL.Services.EmailSender;
 
 namespace TaskThree.PL
 {
@@ -59,7 +60,7 @@ namespace TaskThree.PL
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.User.RequireUniqueEmail = true;
 
-            }).AddEntityFrameworkStores<ApplicationDBContext>();
+            }).AddEntityFrameworkStores<ApplicationDBContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -78,6 +79,7 @@ namespace TaskThree.PL
 				options.ExpireTimeSpan = TimeSpan.FromDays(1);
 				options.AccessDeniedPath = "/Home/Error";
 			});
+            services.AddTransient<IEmailSender, EmailSender>();
 
             //services.AddAuthentication();
 		}
