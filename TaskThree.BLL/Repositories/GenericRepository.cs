@@ -18,16 +18,14 @@ namespace TaskThree.BLL.Repositories
         {
             _dbContext = dbContext;//Ask CLR to create the dbcontext object 
         }
-        public int Add(T entity)
+        public void Add(T entity)
         {
             _dbContext.Set<T>().Add(entity);
-            return _dbContext.SaveChanges();
         }
 
-        public int Delete(T entity)
+        public void Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            return _dbContext.SaveChanges();
         }
 
         public T Get(int id)
@@ -37,13 +35,19 @@ namespace TaskThree.BLL.Repositories
 
         public IEnumerable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking().ToList();
+            if (typeof(T) == typeof(Employee))
+            {
+                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            }
+            else
+            {
+                return _dbContext.Set<T>().AsNoTracking().ToList();
+            }
         }
 
-        public int Update(T entity)
+        public void Update(T entity)
         {
-            _dbContext.Set<T>().Update(entity);
-            return _dbContext.SaveChanges();
+                _dbContext.Set<T>().Update(entity);
         }
     }
 }
