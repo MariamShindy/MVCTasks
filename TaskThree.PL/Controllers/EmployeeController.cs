@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,9 @@ using TaskThree.PL.ViewModels;
 
 namespace TaskThree.PL.Controllers
 {
-    public class EmployeeController : Controller
+	[Authorize]
+
+	public class EmployeeController : Controller
     {
         private readonly IWebHostEnvironment _env;
         private readonly IUnitOfWork unitOfWork;
