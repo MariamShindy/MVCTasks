@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System;
 using TaskThree.DA.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace TaskThree.PL.ViewModels
 {
@@ -34,5 +35,7 @@ namespace TaskThree.PL.ViewModels
 		//Navigational property
 		//[InverseProperty(nameof(Models.Department.Employees))]
 		public Department Department { get; set; }
+		public IFormFile Image { get; set; }
+		public string ImageName { get; set; }
 	}
 }

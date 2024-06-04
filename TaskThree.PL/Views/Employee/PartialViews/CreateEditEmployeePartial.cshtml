@@ -2,7 +2,7 @@
 @inject IUnitOfWork _unitofwork
 
 @{
-    var departments = new SelectList(_unitofwork.Repository<Department>().GetAll(), nameof(Department.Id), nameof(Department.Name));
+    var departments = new SelectList(_unitofwork.Repository<Department>().GetAllAsync(), nameof(Department.Id), nameof(Department.Name));
 }
 <div class="form-group">
     <label class="col-form-label" asp-for="Name"></label>
@@ -55,4 +55,8 @@
         <option value ="@null"> Select Department </option>
     </select>
 
+</div>
+<div class="form-group">
+    <label class="col-form-label" asp-for="Image"></label>
+    <input type="file" class="form-control-file" asp-for="Image" />
 </div>

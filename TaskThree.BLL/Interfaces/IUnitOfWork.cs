@@ -7,9 +7,9 @@ using TaskThree.DA.Models;
 
 namespace TaskThree.BLL.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IAsyncDisposable
     {
         IGenericRepository<T> Repository<T>() where T : ModelBase;
-        public int Complete();
+        public Task<int> Complete();
     }
 }
