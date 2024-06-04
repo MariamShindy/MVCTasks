@@ -22,5 +22,6 @@ namespace TaskThree.DA.Data
         }
 
         public DbSet <Department> Departments { get; set; }
+        public DbSet <Employee> Employees { get; set; }
     }
 }
